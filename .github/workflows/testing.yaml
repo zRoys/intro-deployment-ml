@@ -10,17 +10,17 @@ jobs:
     steps:
       - name: Checkout the repo
         uses: actions/checkout@v2
-      - name: Creating and activating virtual environment
-        run: |
-          pip3 install virtualenv
-          virtualenv venv
-          source venv/bin/activate
+      - name: Set up Conda
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          activate-environment: env  # Nombre de tu entorno Conda
       - name: Installing dependencies
         run: |
-          pip3 install dvc[gs]
+          pip install dvc[gs]
           pip install -r requirements.txt
       - name: Testing API
         run: |
           export GOOGLE_APPLICATION_CREDENTIALS=$(python utilities/setter.py)
           dvc pull model/model.pkl -r model-tracker
           pytest test.py
+
