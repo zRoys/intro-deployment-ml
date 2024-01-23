@@ -13,7 +13,7 @@ jobs:
       - name: Set up Conda
         uses: conda-incubator/setup-miniconda@v2
         with:
-          activate-environment: env  # Nombre de tu entorno Conda
+          activate-environment: env  
       - name: Installing dependencies
         run: |
           pip install dvc[gs]
