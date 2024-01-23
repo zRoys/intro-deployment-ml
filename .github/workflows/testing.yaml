@@ -9,7 +9,7 @@ jobs:
       SERVICE_ACCOUNT_KEY: ${{ secrets.SERVICE_ACCOUNT_KEY }}
     steps:
       - name: Checkout the repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Set up Conda
         uses: conda-incubator/setup-miniconda@v2
         with:
