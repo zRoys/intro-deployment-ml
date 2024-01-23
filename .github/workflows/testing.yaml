@@ -1,26 +1,29 @@
 name: Testing API
-on:
-  push:
-  pull_request:
+
+on: [push, pull_request]
+
 jobs:
   testing-api:
     runs-on: ubuntu-latest
+
     env:
       SERVICE_ACCOUNT_KEY: ${{ secrets.SERVICE_ACCOUNT_KEY }}
+
     steps:
       - name: Checkout the repo
-        uses: actions/checkout@v3
-      - name: Set up Conda
-        uses: conda-incubator/setup-miniconda@v2
-        with:
-          activate-environment: env  
+        uses: actions/checkout@v2
+
+      - name: Setup Conda environment
+        run: |
+          conda create --name env python=3.8 -y
+          source activate env
+
       - name: Installing dependencies
         run: |
-          pip install dvc[gs]
-          pip install -r requirements.txt
-      - name: Testing API
+          pip install -r requirements_test.txt
+
+      - name: Test API
         run: |
           export GOOGLE_APPLICATION_CREDENTIALS=$(python utilities/setter.py)
           dvc pull model/model.pkl -r model-tracker
-          pytest test.py
-
+          pytest tests.py
