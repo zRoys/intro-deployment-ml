@@ -1,8 +1,8 @@
-name: Continuos Training
+name: Continuous Training
 on:
   push:
     branches:
-      - workflow_continuos_training
+      - workflow_continuous_training
   schedule:
     - cron: '0 */6 * * *'
   workflow_dispatch:
@@ -11,49 +11,42 @@ on:
         description: Why to run this?
         required: false
         default: running CT
-
 jobs:
-  continuos-training:
+  continuous-training:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout repo
         uses: actions/checkout@v2
-
       - name: Train model
-        env:
+        env: 
           SERVICE_ACCOUNT_KEY: ${{ secrets.SERVICE_ACCOUNT_KEY }}
         run: |
-          pip3 install virtualenv
-          virtualenv venv
-          source venv/bin/activate
-          pip install -r src/requirements.txt
-          export GOOGLE_APPLICATION_CREDENTIALS=$(python utilities/setter.py)
-          dvc pull model/model.pkl.dvc -r model-tracker
-          dvc unprotect model/model.pkl
-          dvc repro -f
-          echo "Training completed"
-          dvc add model/model.pkl -r model-tracker --to-remote
-          dvc push model/model.pkl.dvc -r model-tracker
-
+           pip3 install virtualenv
+           virtualenv venv
+           source venv/bin/activate
+           pip install -r src/requirements.txt
+           export GOOGLE_APPLICATION_CREDENTIALS=$(python utilities/setter.py)
+           dvc pull model/model.pkl.dvc -r model-tracker
+           dvc unprotect model/model.pkl
+           dvc repro -f 
+           echo "Training Completed"
+           dvc add model/model.pkl -r model-tracker --to-remote
+           dvc push model/model.pkl.dvc -r model-tracker
       - name: Commit .dvc file changes
         run: |
-          git config --global user.email "roysteve.nc@gmail.com"
-          git config --global user.name "github-actions[bot]"
+          git config --local user.email "ing.gersonp@gmail.com"
+          git config --local user.name "github-actions[bot]"
           git add model/model.pkl.dvc
-
+          git commit -m "Updating model serialization"
       - uses: ad-m/github-push-action@master
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.ref }}
-
-      - uses: iterative/setup-dvc@v1
-
+            github_token: ${{ secrets.GITHUB_TOKEN }}
+            branch: ${{ github.ref }}
+      - uses: iterative/setup-cml@v1
       - name: Push metrics
         env:
-          REPO_TOKERN: ${{ secrets.REPO_TOKEN }}
+          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          cat report.txt >> report.md
-          cml-publisgh prediction_behavior.png --md >> report.md
+          cat report.txt >> report.md 
+          cml-publish prediction_behavior.png --md >> report.md
           cml-send-comment report.md
-
-
