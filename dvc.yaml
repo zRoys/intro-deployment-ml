@@ -1,9 +1,9 @@
 stages:
   prepare:
-    cmd: python /intro-deployment-ml/src/prepare.py
+    cmd: python src/prepare.py
     outs:
-    - intro-deployment-ml/dataset/full_data.csv
+    - dataset/full_data.csv
   training:
-    cmd: python intro-deployment-ml/src/train.py
+    cmd: python src/train.py
     deps:
-    - intro-deployment-ml/dataset/full_data.csv
+    - dataset/full_data.csv
