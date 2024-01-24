@@ -1,22 +1,20 @@
-name: Continuous Training
-
+name: Continuos Training
 on:
   push:
     branches:
-      - workflow_continuos_training  
+      - workflow_continuos_training
   schedule:
-    - cron: '0 */6 * * *'            
+    - cron: '0 */6 * * *'
   workflow_dispatch:
     inputs:
       reason:
-        description: "Why to run this?"
+        description: Why to run this?
         required: false
-        default: "Running Continuous Training"
+        default: running CT
 
 jobs:
-  continuous-training:
-    runs-on: ubuntu-latest            
-
+  continuos-training:
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -42,15 +40,20 @@ jobs:
           git config --global user.email "roysteve.nc@gmail.com"
           git config --global user.name "github-actions[bot]"
           git add model/model.pkl.dvc
-          git commit -m "Update model file"
-          git push
 
-      - uses: iterative/setup-dvc@v2
+      - uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
+
+      - uses: iterative/setup-dvc@v1
 
       - name: Push metrics
         env:
-          REPO_TOKEN: ${{ secrets.REPO_TOKEN }}
+          REPO_TOKERN: ${{ secrets.REPO_TOKEN }}
         run: |
           cat report.txt >> report.md
-          cml-publish prediction_behavior.png --md >> report.md
+          cml-publisgh prediction_behavior.png --md >> report.md
           cml-send-comment report.md
+
+
