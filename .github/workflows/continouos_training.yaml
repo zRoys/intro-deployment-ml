@@ -41,12 +41,11 @@ jobs:
         run: |
           git config --local user.email "roysteve.nc@gmail.com"
           git config --local user.name "github-actions[bot]"
+          git pull origin main --ff-only # Actualizar la rama local con los cambios remotos
           git add model/model.pkl.dvc
           git commit -m "Updating model serialization"
-
-      - uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          git pull origin main --no-edit # Fusionar los cambios remotos en la rama local
+          git push origin main # Empujar a la rama principal
 
       - uses: iterative/setup-cml@v1
 
