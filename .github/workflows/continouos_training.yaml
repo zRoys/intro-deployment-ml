@@ -44,7 +44,8 @@ jobs:
           git pull origin main --ff-only 
           git add model/model.pkl.dvc
           git commit -m "Updating model serialization"
-          git pull origin main --no-edit 
+          git merge --no-ff origin/main 
+          git pull origin main 
           git push origin main 
 
       - uses: iterative/setup-cml@v1
