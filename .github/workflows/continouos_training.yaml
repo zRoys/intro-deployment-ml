@@ -49,12 +49,13 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ github.ref }}
 
-      - uses: iterative/setup-cml@v1
+      - uses: iterative/setup-cml@v2
+      - uses: iterative/checkout@v2
 
       - name: Push metrics
         env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          cat report.txt >> report.md 
+          echo 'CML report' > report.md 
           echo "![](./prediction_behavior.png)" >> report.md
-          cml comment create report.md
+          cml comment create --publish report.md
