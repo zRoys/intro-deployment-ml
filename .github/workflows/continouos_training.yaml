@@ -50,7 +50,6 @@ jobs:
           branch: ${{ github.ref }}
 
       - uses: iterative/setup-cml@v2
-      - uses: iterative/checkout@v2
 
       - name: Push metrics
         env:
