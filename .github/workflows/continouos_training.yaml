@@ -36,7 +36,7 @@ jobs:
 
       - name: Commit .dvc file changes
         run: |
-          git config --local user.email "roysteve.nc@gmail.com"
+          git config --local user.email " "
           git config --local user.name "github-actions[bot]"
           git add model/model.pkl.dvc
           git commit -m "Updating model serialization"
